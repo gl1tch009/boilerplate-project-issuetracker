@@ -18,7 +18,7 @@ module.exports = function (app, db) {
             } = req.query;
             db.findOne({ project_name: project }, (err, data) => {
                 if (err) return res.json({ error: "could not get" });
-                let issues = data.issues;
+                let issues = data?.issues || [];
                 if (_id)
                     issues = issues.filter((issue) => issue._id.equals(_id));
                 if (issue_title)
