@@ -71,7 +71,8 @@ module.exports = function (app, db) {
             };
             db.findOne({ project_name: project }, (err, data) => {
                 if (err) return res.json({ error: "could not create" });
-                const issues = data.issues;
+                if (!data) return res.json({ error: "could not create" });
+                const issues = data.issues || [];
                 issues.push(newIssue);
                 db.findOneAndUpdate(
                     { project_name: project },
