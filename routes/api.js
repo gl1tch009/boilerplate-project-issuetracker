@@ -70,8 +70,10 @@ module.exports = function (app, db) {
                 open: true,
             };
             db.findOne({ project_name: project }, (err, data) => {
-                if (err) return res.json({ error: "could not create" });
-                if (!data) return res.json({ error: "could not create" });
+                if (err)
+                    return res.json({ error: "could not create", issue_title });
+                if (!data)
+                    return res.json({ error: "could not create", issue_title });
                 const issues = data.issues || [];
                 issues.push(newIssue);
                 db.findOneAndUpdate(
@@ -79,7 +81,11 @@ module.exports = function (app, db) {
                     { $set: { issues: issues } },
                     { returnOriginal: false },
                     (err, data) => {
-                        if (err) return res.json({ error: "could not create" });
+                        if (err)
+                            return res.json({
+                                error: "could not create",
+                                issue_title,
+                            });
                         res.json(newIssue);
                     }
                 );
@@ -109,6 +115,8 @@ module.exports = function (app, db) {
                 return res.json({ error: "no update field(s) sent", _id: _id });
             db.findOne({ project_name: project }, (err, data) => {
                 if (err)
+                    return res.json({ error: "could not update", _id: _id });
+                if (!data)
                     return res.json({ error: "could not update", _id: _id });
                 const issues = data.issues;
                 const index = issues.findIndex((issue) =>
